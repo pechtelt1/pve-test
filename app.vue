@@ -8,24 +8,25 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 
-// Voeg de fetch-polyfill toe
-if (typeof fetch === 'undefined') {
-  import('whatwg-fetch'); // Dynamisch laden van polyfill
-}
-
-// Reactieve variabele om de fetch-data op te slaan
+// Reactieve variabele om de data op te slaan
 const fetchData = ref('Laden...');
 
-onMounted(async () => {
-  try {
-    const response = await fetch('https://jsonplaceholder.typicode.com/todos/1'); // Vervang door je eigen URL indien nodig
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+onMounted(() => {
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://jsonplaceholder.typicode.com/todos/1', true); // Vervang door je eigen URL indien nodig
+
+  xhr.onload = function () {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      fetchData.value = JSON.stringify(JSON.parse(xhr.responseText), null, 2); // Sla de data op
+    } else {
+      fetchData.value = `Fout bij ophalen: HTTP ${xhr.status}`;
     }
-    const data = await response.json();
-    fetchData.value = JSON.stringify(data, null, 2); // Data opslaan in de reactieve variabele
-  } catch (error) {
-    fetchData.value = `Fetch mislukt: ${error.message}`;
-  }
+  };
+
+  xhr.onerror = function () {
+    fetchData.value = 'Netwerkfout of CORS-probleem';
+  };
+
+  xhr.send();
 });
 </script>
