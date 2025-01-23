@@ -1,7 +1,5 @@
 <template>
   <div>
-    <!-- <NuxtRouteAnnouncer /> -->
-    <NuxtWelcome />
     <p>Fetch-resultaat:</p>
     <pre>{{ fetchData }}</pre>
   </div>
