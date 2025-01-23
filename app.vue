@@ -1,14 +1,19 @@
 <template>
   <div>
     <!-- <NuxtRouteAnnouncer /> -->
-    <NuxtWelcome/>
+    <NuxtWelcome />
     <p>Fetch-resultaat:</p>
     <pre>{{ fetchData }}</pre>
   </div>
 </template>
 
 <script setup>
-import {onMounted, ref} from 'vue';
+import { ref, onMounted } from 'vue';
+
+// Voeg de fetch-polyfill toe
+if (typeof fetch === 'undefined') {
+  import('whatwg-fetch'); // Dynamisch laden van polyfill
+}
 
 // Reactieve variabele om de fetch-data op te slaan
 const fetchData = ref('Laden...');
